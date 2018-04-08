@@ -1,0 +1,38 @@
+%example7_programming
+%
+%This code exemplifies some basic programming structures like if statements
+%and for loops by going through the excersize of constructing an array
+%representing a piecewise continous triangular function.
+%
+%Tom Allison 8/22/2013
+
+t = linspace(0,1);
+
+f = zeros(1,length(t)); % initialize the array outside of the loop because 
+                        % resizing arrays is slow and you don't want to do
+                        % this every iteration of the loop.
+
+%The for loop below steps through t element by element to construct a
+%triangular function. The cusp occurs at t= 0.5 where the functional form
+%shifts.
+                        
+for j = 1:length(t); %a for loop with length(t) steps.                        
+                     %j is the loop counter and increments by 1 each
+                     %iteration.
+    
+    if t(j) <0.5     %if the jth element of t is less than 0.5
+        f(j) = t(j);  % assign the jth value of f to the jth value of t
+    
+    
+    else             %otherwise....  
+        f(j) = -(t(j)-1); %asign the jth value of f a different value.
+    end % end if statement
+end %end for loop
+
+figure(1);
+plot(t,f);
+xlabel('t');
+ylabel('f');
+grid on
+
+%Voila, a piecewise continous triangular function

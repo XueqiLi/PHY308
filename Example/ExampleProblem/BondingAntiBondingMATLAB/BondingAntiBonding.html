@@ -1,0 +1,184 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>BondingAntiBonding</title><meta name="generator" content="MATLAB 8.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2013-10-30"><meta name="DC.source" content="BondingAntiBonding.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Preliminaries</a></li><li><a href="#3">Solve problem for different values of a in for loop</a></li><li><a href="#4">Plot results</a></li></ul></div><pre class="codeinput"><span class="comment">%BondingAntiBonding.m</span>
+<span class="comment">%</span>
+<span class="comment">%This script makes plots for the bonding vs. antibonding orbitals.</span>
+<span class="comment">%</span>
+<span class="comment">%Tom Allison 10/25/2013</span>
+</pre><h2>Preliminaries<a name="2"></a></h2><pre class="codeinput">V0 = 1;
+hbar = 1;
+m = 1;
+
+eps = - m*V0^2/(2*hbar^2);
+
+alpha = m*V0/hbar^2;
+
+a = linspace(0.3,4);
+
+Ep = zeros(1,length(a));
+Em = zeros(1,length(a));
+</pre><h2>Solve problem for different values of a in for loop<a name="3"></a></h2><pre class="codeinput"><span class="keyword">for</span> j = 1:length(a)
+    <span class="comment">%analytic equations for matrix element integrals as a function of a.</span>
+    <span class="comment">%SEE PDF.</span>
+    h1 = V0*alpha*exp(-2*alpha*a(j));
+    h2 = ( hbar^2/(2*m)*(alpha-a(j)*alpha.^3) - 2*V0*alpha).*exp(-alpha*a(j));
+    s1 = (alpha*a(j)+1)*exp(-alpha*a(j));
+
+    H = [eps - h1     h2;
+          h2        eps - h1];
+    S = [1      s1
+        s1      1];
+
+    <span class="comment">% construct matrix to diagonalize</span>
+    A = inv(S)*H;
+
+    <span class="comment">%Diagonalize Matrix</span>
+    [V,D] = eig(A);
+
+    Ep(j) = min([D(1,1),D(2,2)]);
+    Em(j) = max([D(2,2),D(1,1)]);
+
+<span class="keyword">end</span>
+</pre><h2>Plot results<a name="4"></a></h2><pre class="codeinput">figure(1);
+hb = plot(a,Ep/(abs(eps)),<span class="string">'k'</span>);
+hold <span class="string">on</span>
+ha = plot(a,Em/(abs(eps)),<span class="string">'r'</span>);
+hold <span class="string">off</span>
+grid <span class="string">on</span>
+xlabel(<span class="string">'\alpha a'</span>);
+ylabel(<span class="string">'Energy/|\epsilon|'</span>);
+legend([hb,ha],<span class="string">'Bonding Orbital'</span>,<span class="string">'Antibonding Orbital'</span>);
+</pre><img vspace="5" hspace="5" src="BondingAntiBonding_01.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2012b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%BondingAntiBonding.m
+%
+%This script makes plots for the bonding vs. antibonding orbitals.
+%
+%Tom Allison 10/25/2013
+
+%% Preliminaries
+
+V0 = 1;
+hbar = 1;
+m = 1;
+
+eps = - m*V0^2/(2*hbar^2);
+
+alpha = m*V0/hbar^2;
+
+a = linspace(0.3,4);
+
+Ep = zeros(1,length(a));
+Em = zeros(1,length(a));
+
+%% Solve problem for different values of a in for loop
+
+for j = 1:length(a)
+    %analytic equations for matrix element integrals as a function of a.
+    %SEE PDF.
+    h1 = V0*alpha*exp(-2*alpha*a(j));
+    h2 = ( hbar^2/(2*m)*(alpha-a(j)*alpha.^3) - 2*V0*alpha).*exp(-alpha*a(j));
+    s1 = (alpha*a(j)+1)*exp(-alpha*a(j));
+    
+    H = [eps - h1     h2;
+          h2        eps - h1];
+    S = [1      s1
+        s1      1];
+    
+    % construct matrix to diagonalize
+    A = inv(S)*H;
+    
+    %Diagonalize Matrix
+    [V,D] = eig(A);
+    
+    Ep(j) = min([D(1,1),D(2,2)]);
+    Em(j) = max([D(2,2),D(1,1)]);
+       
+end
+
+%% Plot results
+
+figure(1);
+hb = plot(a,Ep/(abs(eps)),'k');
+hold on
+ha = plot(a,Em/(abs(eps)),'r');
+hold off
+grid on
+xlabel('\alpha a');
+ylabel('Energy/|\epsilon|');
+legend([hb,ha],'Bonding Orbital','Antibonding Orbital');    
+
+
+
+
+
+   
+
+
+##### SOURCE END #####
+--></body></html>
